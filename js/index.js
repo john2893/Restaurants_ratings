@@ -1,29 +1,65 @@
 $(document).ready(function(){
+    
     $(".btn").on('click', function(e){
+        var ctx = document.getElementById('myChart');
+        
         e.preventDefault();
-        var api_url2 = 'https://developers.zomato.com/api/v2.1/search?q=Winston-Salem&apikey=a982f0cb4a2ba6601a7827e1c358ce1a&start=0&count=20';
+        var api_url = 'https://developers.zomato.com/api/v2.1/search?q=Winston-Salem&apikey=a982f0cb4a2ba6601a7827e1c358ce1a&start=0&count=20';
         $.ajax({
             url:api_url,
             method:'GET',
             success: function (data){
-                console.log(data.restaurants[4]);
+                console.log(data.restaurants);
                 for (var i=1; i < data.restaurants.length; i++){
 
-                    var nDiv = $('<ul>');
-                    var title = $('<li>');
-                    var cuisine = $('<h5>', {"class": "card-subtitle cuisine"});
+                    var nDiv = $('<tr>');
+                    var title = $('<td>');
+                    var cuisine = $('<td>');
                     var address = $('<h5>', {"class": "card-subtitle address"});
                     var link = $('<a>', {"class": "subtitle link"});
+                    var rating = data.restaurants[i].restaurant.user_rating.aggregate_rating;
                     
                     $(title).text(data.restaurants[i].restaurant.name);
-                    // $(cuisine.text(data.restaurants[i].restaurant.cuisines)).appendTo(nSdiv)
+                    $(cuisine).text(data.restaurants[i].restaurant.cuisines)
                     // $(address.text(data.restaurants[i].restaurant.location.address)).appendTo(nSdiv);
                     // $(link).attr("href", data.restaurants[i].restaurant.menu_url);
                     // $(link).text("menu link")
                     // $(link).appendTo(nSdiv);
+
                     $(title).appendTo(nDiv);
+                    $(cuisine).appendTo(nDiv);
                     $(nDiv).appendTo(".new");
-                    
+                    var myChart = new Chart(ctx, {
+                        
+                        type: 'bar',
+                        data: {
+                            labels: [],
+                            datasets: [{
+                                label: 'Ratings',
+                                data: [],
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                
+                                ],
+                                borderColor: [
+                                    
+                        
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero: true
+                                    }
+                                }]
+                            }
+                        }
+                    });
+                    data.labels.push(data.restaurants[i].restaurant.name);
+                    data.datasets.data.push(data.restaurants[i].restaurant.user_rating.aggregate_rating)
                 
                 }
                 
