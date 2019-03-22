@@ -10,14 +10,17 @@ $(document).ready(function(){
             method:'GET',
             success: function (data){
                 console.log(data.restaurants);
+                var labelsArray = [];
+                var dataArray = [];
+                var rating = data.restaurants[i];
                 for (var i=1; i < data.restaurants.length; i++){
-
+                 
                     var nDiv = $('<tr>');
                     var title = $('<td>');
                     var cuisine = $('<td>');
-                    var address = $('<h5>', {"class": "card-subtitle address"});
-                    var link = $('<a>', {"class": "subtitle link"});
-                    var rating = data.restaurants[i].restaurant.user_rating.aggregate_rating;
+                    // var address = $('<h5>', {"class": "card-subtitle address"});
+                    // var link = $('<a>', {"class": "subtitle link"});
+                    // var rating = data.restaurants[i].restaurant.user_rating.aggregate_rating;
                     
                     $(title).text(data.restaurants[i].restaurant.name);
                     $(cuisine).text(data.restaurants[i].restaurant.cuisines)
@@ -29,41 +32,54 @@ $(document).ready(function(){
                     $(title).appendTo(nDiv);
                     $(cuisine).appendTo(nDiv);
                     $(nDiv).appendTo(".new");
-                    var myChart = new Chart(ctx, {
-                        
-                        type: 'bar',
-                        data: {
-                            labels: [],
-                            datasets: [{
-                                label: 'Ratings',
-                                data: [],
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
-                                
-                                ],
-                                borderColor: [
-                                    
-                        
-                                ],
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        beginAtZero: true
-                                    }
-                                }]
-                            }
-                        }
-                    });
-                    data.labels.push(data.restaurants[i].restaurant.name);
-                    data.datasets.data.push(data.restaurants[i].restaurant.user_rating.aggregate_rating)
+                   
+                    var name = data.restaurants[i].restaurant.name
+                    var dataA = data.restaurants[i].restaurant.user_rating.aggregate_rating
+                    
+                    labelsArray.push(name)
+                    dataArray.push(dataA)
                 
                 }
+                var data = {
+                  labels: labelsArray,
+                  datasets: [{
+                    label: "Dataset #1",
+                    backgroundColor: "rgba(255,99,132,0.2)",
+                    borderColor: "rgba(255,99,132,1)",
+                    borderWidth: 2,
+                    hoverBackgroundColor: "rgba(255,99,132,0.4)",
+                    hoverBorderColor: "rgba(255,99,132,1)",
+                    data: dataArray,
+                  }]
+                };
                 
-            }
+                var options = {
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  scales: {
+                    yAxes: [{
+                      stacked: true,
+                      gridLines: {
+                        display: true,
+                        color: "rgba(255,99,132,0.2)"
+                      }
+                    }],
+                    xAxes: [{
+                      stacked: true,
+                      gridLines: {
+                        display: false
+                      }
+                    }]
+                  }
+                };
+                
+                Chart.Bar('myChart', {
+                  options: options,
+                  data: data
+                });
+                
+              }  
+          
             
         
         })
