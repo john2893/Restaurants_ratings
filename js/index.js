@@ -35,15 +35,20 @@ $(document).ready(function(){
                    
                     var name = data.restaurants[i].restaurant.name
                     var dataA = data.restaurants[i].restaurant.user_rating.aggregate_rating
-                    
+                    if (dataA == 0){
+                      dataA = dataA + 0.2
+                      dataArray.push(dataA)
+                    } else {
+                      dataArray.push(dataA)
+                    }
                     labelsArray.push(name)
-                    dataArray.push(dataA)
+                    // dataArray.push(dataA)
                 
                 }
                 var data = {
                   labels: labelsArray,
                   datasets: [{
-                    label: "Dataset #1",
+                    
                     backgroundColor: "rgba(255,99,132,0.2)",
                     borderColor: "rgba(255,99,132,1)",
                     borderWidth: 2,
@@ -61,6 +66,7 @@ $(document).ready(function(){
                       stacked: true,
                       gridLines: {
                         display: true,
+                        ticks: {mirror: true},
                         color: "rgba(255,99,132,0.2)"
                       }
                     }],
@@ -69,14 +75,21 @@ $(document).ready(function(){
                       gridLines: {
                         display: false
                       }
+                      
                     }]
                   }
                 };
-                
-                Chart.Bar('myChart', {
-                  options: options,
-                  data: data
+                var ctx = $('#myChart');
+                var myBar = new Chart(ctx, {
+                  type: 'horizontalBar',
+                  data: data,
+                  options: options
                 });
+                // Chart.Bar('myChart', {
+                //   type:'horizontalBar',
+                //   options: options,
+                //   data: data
+                // });
                 
               }  
           
